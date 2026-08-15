@@ -36,6 +36,8 @@ export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
+    if (!supabase) { setLoading(false); return; }
+
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (user) {
         const { data } = await supabase
@@ -65,7 +67,7 @@ export function Navbar() {
   }, []);
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
+    if (supabase) await supabase.auth.signOut();
     router.push("/");
     router.refresh();
   };
