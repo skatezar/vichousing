@@ -38,26 +38,27 @@ export function Navbar() {
   useEffect(() => {
     if (!supabase) { setLoading(false); return; }
 
-    supabase.auth.getUser().then(async ({ data: { user } }: { data: { user: any } }) => {
+    supabase.auth.getUser().then(async (result: any) => {
+      const user = result?.data?.user;
       if (user) {
-        const { data } = await supabase
+        const profileResult = await supabase
           .from("profiles")
           .select("*")
           .eq("id", user.id)
           .single();
-        setProfile(data);
+        setProfile(profileResult.data);
       }
       setLoading(false);
     });
 
-    const { data: listener } = supabase.auth.onAuthStateChange(async (_: any, session: any) => {
+    const { data: listener } = supabase.auth.onAuthStateChange(async (event: any, session: any) => {
       if (session?.user) {
-        const { data } = await supabase
+        const profileResult = await supabase
           .from("profiles")
           .select("*")
           .eq("id", session.user.id)
           .single();
-        setProfile(data);
+        setProfile(profileResult.data);
       } else {
         setProfile(null);
       }

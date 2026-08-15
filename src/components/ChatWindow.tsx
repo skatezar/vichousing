@@ -26,8 +26,8 @@ export function ChatWindow({ conversationId, currentUserId, otherUser }: ChatWin
       .select("*, profiles(*)")
       .eq("conversation_id", conversationId)
       .order("created_at", { ascending: true })
-      .then(({ data }: { data: any }) => {
-        if (data) setMessages(data as any);
+      .then((result: any) => {
+        if (result.data) setMessages(result.data);
       });
 
     // Subscribe to real-time
@@ -41,14 +41,14 @@ export function ChatWindow({ conversationId, currentUserId, otherUser }: ChatWin
           table: "messages",
           filter: `conversation_id=eq.${conversationId}`,
         },
-        async (payload: any) => {
-          const { data } = await supabase
+        async (payload: Record<string, any>) => {
+          const result = await supabase
             .from("messages")
             .select("*, profiles(*)")
             .eq("id", payload.new.id)
             .single();
-          if (data) {
-            setMessages((prev) => [...prev, data as any]);
+          if (result.data) {
+            setMessages((prev: any[]) => [...prev, result.data]);
           }
         }
       )
