@@ -38,7 +38,7 @@ export function Navbar() {
   useEffect(() => {
     if (!supabase) { setLoading(false); return; }
 
-    supabase.auth.getUser().then(async ({ data: { user } }) => {
+    supabase.auth.getUser().then(async ({ data: { user } }: { data: { user: any } }) => {
       if (user) {
         const { data } = await supabase
           .from("profiles")
@@ -50,7 +50,7 @@ export function Navbar() {
       setLoading(false);
     });
 
-    const { data: listener } = supabase.auth.onAuthStateChange(async (_, session) => {
+    const { data: listener } = supabase.auth.onAuthStateChange(async (_: any, session: any) => {
       if (session?.user) {
         const { data } = await supabase
           .from("profiles")

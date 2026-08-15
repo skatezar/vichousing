@@ -26,7 +26,7 @@ export function ChatWindow({ conversationId, currentUserId, otherUser }: ChatWin
       .select("*, profiles(*)")
       .eq("conversation_id", conversationId)
       .order("created_at", { ascending: true })
-      .then(({ data }) => {
+      .then(({ data }: { data: any }) => {
         if (data) setMessages(data as any);
       });
 
@@ -41,7 +41,7 @@ export function ChatWindow({ conversationId, currentUserId, otherUser }: ChatWin
           table: "messages",
           filter: `conversation_id=eq.${conversationId}`,
         },
-        async (payload) => {
+        async (payload: any) => {
           const { data } = await supabase
             .from("messages")
             .select("*, profiles(*)")
